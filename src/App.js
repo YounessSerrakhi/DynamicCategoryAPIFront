@@ -1,24 +1,24 @@
-import logo from './logo.svg';
+import { Routes,Route, useNavigate } from 'react-router-dom';
 import './App.css';
+import AddType from './Components/AddType';
+import AddProduct from './Components/AddProduct';
+import { useEffect } from 'react';
+
 
 function App() {
+  const navigate = useNavigate()
+useEffect(() =>{
+     navigate("/")
+     document.title = "Dynamic Type"
+},[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Routes>
+          <Route path='/createProduct' element={<AddProduct/>} />
+          <Route path='/' element={<AddType/>} />
+        </Routes>
     </div>
+
   );
 }
 
