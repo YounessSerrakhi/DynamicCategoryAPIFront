@@ -50,7 +50,19 @@ const Catalog = () => {
       <h2>{selectedType || "All Types"}</h2>
         {filteredProducts.map((product) => (
           <div key={product.productId} className="type-item">
-            <h2>{product.productName}</h2>
+           
+            <div style={{ float: "left",width: "200px"}}>
+            {product.image && (
+          <img
+            src={`data:image/*;base64, ${product.image}`} 
+            alt={product.productName}
+            width="300"
+            height="150"
+          />
+        )}
+        </div>
+          <div style={{marginLeft: "220px"}}>
+          <h2>{product.productName}</h2>
             <ul className="characteristic-list">
               {Object.entries(product.caracteristics).map(([charId, value]) => {
                 const characteristic = types
@@ -64,9 +76,11 @@ const Catalog = () => {
               })}
             </ul>
           </div>
+          </div>
         ))}
       </div>
     </div>
+    
   );
 };
 

@@ -9,8 +9,10 @@ const AddProduct = () => {
   const [types, setTypes] = useState([]);
   const [productData, setProductData] = useState({});
   const [productName, setProductName] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
+    
     axios.get('http://localhost:8081/api/types/getAllTypes')
       .then((response) => {
         setTypes(response.data);
@@ -45,26 +47,37 @@ const AddProduct = () => {
   const handleProductNameChange = (event) => {
     setProductName(event.target.value);
   };
-  const handleSubmit = () => {
-    const product = {
-      typeId: selectedType,
-      productName: productName,
-      characteristics: productData,
-    };
-  
-    axios.post('http://localhost:8081/api/products/addProduct', product)
-      .then((response) => {
-        // Show an alert when the product is added successfully
-        alert('Product added successfully!');
-        // Reset all fields and state
-        setSelectedType('');
-        setProductName('');
-        setProductData({});
-      })
-      .catch((error) => {
-        console.error('Error adding product:', error);
-      });
-  };
+ const handleImageChange = (event) => {
+  const file = event.target.files[0];
+  setSelectedImage(file);
+};
+
+const handleSubmit = () => {
+  const formData = new FormData();
+  formData.append('image', selectedImage);
+  formData.append('product', new Blob([JSON.stringify({
+    typeId: selectedType,
+    productName: productName,
+    characteristics: productData,
+  })], { type: 'application/json' }));
+
+  axios.post('http://localhost:8081/api/products/addProduct', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+    .then((response) => {
+      alert('Product added successfully!');
+      setSelectedType('');
+      setProductName('');
+      setProductData({});
+      setSelectedImage(null);
+    })
+    .catch((error) => {
+      console.error('Error adding the product:', error);
+    });
+};
+
   
 
   return (
@@ -82,7 +95,16 @@ const AddProduct = () => {
         <label htmlFor="typeName">Product Name</label>
       </div>
       <div>
-        <label>Select a type:</label>
+        <label>Select an image:</label>
+        <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+        />
+      </div>
+      <div>
+        <br></br>
+        <label></label>
         <select
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)}
