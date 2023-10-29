@@ -1,0 +1,56 @@
+/* Catalog Container */
+.catalog-container {
+    padding: 20px;
+  }
+  
+  /* Dropdown for Type Selection */
+  select {
+    padding: 5px;
+  }
+  
+  /* Type List */
+  .type-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  /* Type Item */
+  .type-item {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: 80%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Product List */
+  .product-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Product Item */
+  .product-item {
+    padding: 10px;
+    background-color: #fff;
+    margin: 10px 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Characteristic List */
+  .characteristic-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Characteristic Item */
+  .characteristic-item {
+    padding: 5px;
+    font-size: 14px;
+  }
+  

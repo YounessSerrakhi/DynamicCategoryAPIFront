@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import '../style/Product.css'; 
+
 const AddProduct = () => {
   const [selectedType, setSelectedType] = useState('');
   const [characteristics, setCharacteristics] = useState([]);
@@ -20,7 +22,6 @@ const AddProduct = () => {
 
   useEffect(() => {
     if (selectedType) {
-      // Fetch the characteristics for the selected type
       axios.get(`http://localhost:8081/api/types/getType/${selectedType}`)
         .then((response) => {
           setCharacteristics(response.data.caracteristics);
@@ -32,38 +33,42 @@ const AddProduct = () => {
       setCharacteristics([]);
     }
   }, [selectedType]);
-  const handleCharacteristicChange = (e, characteristicId) => {
+
+  const handleCharacteristicChange = (e) => {
     const { name, value } = e.target;
     setProductData((prevData) => ({
       ...prevData,
-      [characteristicId]: { ...prevData[characteristicId], [name]: value },
+      [name]: value,
     }));
   };
+
   const handleProductNameChange = (event) => {
     setProductName(event.target.value);
   };
-
   const handleSubmit = () => {
-    // Create a product object to send to the API
     const product = {
       typeId: selectedType,
+      productName: productName,
       characteristics: productData,
     };
-
-    // Send the product data to the API
+  
     axios.post('http://localhost:8081/api/products/addProduct', product)
       .then((response) => {
-        console.log('Product added:', response.data);
-        // Reset form or show a success message
+        // Show an alert when the product is added successfully
+        alert('Product added successfully!');
+        // Reset all fields and state
+        setSelectedType('');
+        setProductName('');
+        setProductData({});
       })
       .catch((error) => {
         console.error('Error adding product:', error);
-        // Handle the error, e.g., display an error message
       });
   };
+  
 
   return (
-    <div>
+    <div className="add-product-container">
       <h1>Add Product</h1>
       <div className="form-floating mb-3 col-md-12">
         <input
@@ -72,7 +77,7 @@ const AddProduct = () => {
           id="typeName"
           value={productName}
           onChange={handleProductNameChange}
-          placeholder="name@example.com"
+          placeholder="Product Name"
         />
         <label htmlFor="typeName">Product Name</label>
       </div>
@@ -94,33 +99,31 @@ const AddProduct = () => {
       {characteristics.map((characteristic) => (
         <div key={characteristic.caracteristicId}>
           <label>{characteristic.caracteristicName}:</label>
-          {characteristic.caracteristicType === 'Text' && (
+          {characteristic.caracteristicType === 'Text' ? (
             <input
               type="text"
-              name="caracteristicName"
-              value={productData[characteristic.caracteristicId]?.caracteristicName || ''}
-              onChange={(e) => handleCharacteristicChange(e, characteristic.caracteristicId)}
+              name={characteristic.caracteristicId}
+              value={productData[characteristic.caracteristicId] || ''}
+              onChange={handleCharacteristicChange}
             />
-          )}
-          {characteristic.caracteristicType === 'Number' && (
+          ) : characteristic.caracteristicType === 'Double' ? (
             <input
               type="number"
-              name="caracteristicName"
-              value={productData[characteristic.caracteristicId]?.caracteristicName || ''}
-              onChange={(e) => handleCharacteristicChange(e, characteristic.caracteristicId)}
+              name={characteristic.caracteristicId}
+              value={productData[characteristic.caracteristicId] || ''}
+              onChange={handleCharacteristicChange}
             />
-          )}
-          {characteristic.caracteristicType === 'Date' && (
+          ) : characteristic.caracteristicType === 'Date' ? (
             <input
               type="date"
-              name="caracteristicName"
-              value={productData[characteristic.caracteristicId]?.caracteristicName || ''}
-              onChange={(e) => handleCharacteristicChange(e, characteristic.caracteristicId)}
+              name={characteristic.caracteristicId}
+              value={productData[characteristic.caracteristicId] || ''}
+              onChange={handleCharacteristicChange}
             />
-          )}
+          ) : null}
         </div>
       ))}
-      <button onClick={handleSubmit}>Add Product</button>
+      <button className="add-button" onClick={handleSubmit}>Add Product</button>
     </div>
   );
 };
